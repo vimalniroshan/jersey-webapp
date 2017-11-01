@@ -1,15 +1,14 @@
 package com.vml.jersey;
 
-import com.vml.jersey.providers.EntityManagerProvider;
 import com.vml.jersey.providers.Value;
-import com.vml.jersey.providers.ValueInjectionResolver;
 import org.glassfish.hk2.api.InjectionResolver;
 import org.glassfish.hk2.api.TypeLiteral;
-import org.glassfish.hk2.utilities.binding.BindingBuilderFactory;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
 
 import javax.inject.Singleton;
-import javax.persistence.EntityManager;
 import javax.ws.rs.ApplicationPath;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,16 +29,14 @@ public class Application extends ResourceConfig {
     }
 
     public Application() {
-        packages("com.vml.jersey");
+        packages("com.vml.jersey")
+                .property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true)
+                .register(JacksonFeature.class);
 
-        register(new org.glassfish.hk2.utilities.binding.AbstractBinder() {
+        register(new AbstractBinder() {
             @Override
             protected void configure() {
-                bindFactory(EntityManagerProvider.class, Singleton.class)
-                        .to(EntityManager.class)
-                        .in(Singleton.class);
-
-                bind(ValueInjectionResolver.class)
+                bind(Value.ValueInjectionResolver.class)
                         .to(new TypeLiteral<InjectionResolver<Value>>(){})
                         .in(Singleton.class);
             }
