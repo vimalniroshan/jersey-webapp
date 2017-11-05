@@ -16,6 +16,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.util.UUID;
+
 import static com.vml.jersey.utils.DBUtils.doInTransaction;
 
 
@@ -41,7 +43,7 @@ public class EmployeeResource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") Long id) {
+    public Response get(@PathParam("id") UUID id) {
         Employee result = doInTransaction(entityManager, Employee.class, (IDao<Employee> dao) -> dao.find(id));
 
         return result != null ? Response.ok(result).build() : Response.status(Response.Status.NOT_FOUND).build();

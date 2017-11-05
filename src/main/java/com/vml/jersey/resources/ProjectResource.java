@@ -16,6 +16,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.util.UUID;
+
 import static com.vml.jersey.utils.DBUtils.doInTransaction;
 
 @Path("project")
@@ -41,7 +43,7 @@ public class ProjectResource {
     @Path("{id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") final long id) {
+    public Response get(@PathParam("id") final UUID id) {
 
         Project result = doInTransaction(entityManager, Project.class, (IDao<Project> dao) -> dao.find(id));
 

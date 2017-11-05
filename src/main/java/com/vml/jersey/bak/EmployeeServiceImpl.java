@@ -7,6 +7,7 @@ import com.vml.jersey.models.Employee;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.util.UUID;
 
 //@Service @ContractsProvided(EmployeeService.class)
 public class EmployeeServiceImpl implements EmployeeService {
@@ -24,7 +25,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         //((AbstractDao)employeeDao).setEntityManager(entityManager);
         System.out.println("Did some thing");
 
-        Long id;
+        UUID id;
         //entityManager.getTransaction().begin();
         Employee e = new Employee();
         e.setName("Vimal");

@@ -4,19 +4,20 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.vml.jersey.validator.Email;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "employee")
@@ -30,9 +31,13 @@ public class Employee {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
     @Column(name = "id", unique = true)
-    private Long id;
+    private UUID id;
 
     @NotNull(message = "{employee.name.notnull}")
     @Column(name = "name", nullable = false, length = 200)
@@ -57,11 +62,11 @@ public class Employee {
     //@JsonBackReference
     private Project project;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(final Long id) {
+    public void setId(final UUID id) {
         this.id = id;
     }
 
