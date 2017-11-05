@@ -5,6 +5,7 @@ import org.glassfish.hk2.api.InjectionResolver;
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 
@@ -31,6 +32,7 @@ public class Application extends ResourceConfig {
     public Application() {
         packages("com.vml.jersey")
                 .property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true)
+                .register(LoggingFeature.class)
                 .register(JacksonFeature.class);
 
         register(new AbstractBinder() {
@@ -41,6 +43,5 @@ public class Application extends ResourceConfig {
                         .in(Singleton.class);
             }
         });
-
     }
 }

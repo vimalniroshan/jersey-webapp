@@ -1,21 +1,36 @@
 package com.vml.jersey.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.vml.jersey.validator.Email;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
 @Table(name = "employee")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id", scope = Employee.class)
 public class Employee {
 
+    public enum Gender {
+        MALE, FEMALE;
+    }
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
     private Long id;
 
@@ -24,13 +39,23 @@ public class Employee {
     private String name;
 
     @NotNull(message = "{employee.dob.notnull}")
-    //@JsonFormat(pattern = "")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     @Column(name = "dob", nullable = false)
     private Date dob;
 
     @Email(message = "employee.email.format")
     @Column(name = "email", length = 255)
     private String email;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false, length = 10)
+    private Gender gender;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name="project_id", nullable = false, referencedColumnName = "id")
+    //@JsonBackReference
+    private Project project;
 
     public Long getId() {
         return id;
@@ -62,5 +87,21 @@ public class Employee {
 
     public void setEmail(final String email) {
         this.email = email;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(final Gender gender) {
+        this.gender = gender;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(final Project project) {
+        this.project = project;
     }
 }

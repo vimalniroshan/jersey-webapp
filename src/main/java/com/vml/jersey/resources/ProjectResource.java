@@ -1,7 +1,7 @@
 package com.vml.jersey.resources;
 
 import com.vml.jersey.db.IDao;
-import com.vml.jersey.models.Employee;
+import com.vml.jersey.models.Project;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -18,33 +18,33 @@ import javax.ws.rs.core.Response;
 
 import static com.vml.jersey.utils.DBUtils.doInTransaction;
 
-
-@Path("employee")
-public class EmployeeResource {
+@Path("project")
+public class ProjectResource {
 
     @Inject
     private EntityManager entityManager;
 
-    @PUT
+
     @Path("add")
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response add(@NotNull @Valid final Employee employee) {
-        Employee result = doInTransaction(entityManager, Employee.class, (IDao<Employee> dao) -> {
-            dao.create(employee);
-            return employee;
+    public Response add(@NotNull @Valid final Project project) {
+        Project result = doInTransaction(entityManager, Project.class, (IDao<Project> dao) -> {
+            dao.create(project);
+            return project;
         });
 
         return Response.ok(result).build();
     }
 
-    @GET
     @Path("{id}")
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") Long id) {
-        Employee result = doInTransaction(entityManager, Employee.class, (IDao<Employee> dao) -> dao.find(id));
+    public Response get(@PathParam("id") final long id) {
+
+        Project result = doInTransaction(entityManager, Project.class, (IDao<Project> dao) -> dao.find(id));
 
         return result != null ? Response.ok(result).build() : Response.status(Response.Status.NOT_FOUND).build();
     }
-
 }
